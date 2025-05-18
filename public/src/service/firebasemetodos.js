@@ -1,0 +1,28 @@
+import { ref, get,update } from "firebase/database";
+import { db } from "./firebase";
+
+export const getDatosUsuario = async (uid) => {
+  try {
+    const userRef = ref(db, `users/${uid}`);
+    const snapshot = await get(userRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("No se encontraron datos del usuario.");
+    }
+
+    return snapshot.val();
+  } catch (error) {
+    console.error("Error al obtener datos del usuario:", error.message);
+    return null;
+  }
+};
+
+export const updateUserDiamantes = async (uid, nuevosDiamantes) => {
+  try {
+    const userRef = ref(db, `users/${uid}`);
+    await update(userRef, { diamantes: nuevosDiamantes });
+    console.log("Diamantes actualizados correctamente.");
+  } catch (error) {
+    console.error("Error al actualizar diamantes:", error.message);
+  }
+};
